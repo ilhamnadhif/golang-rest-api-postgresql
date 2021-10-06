@@ -9,7 +9,7 @@ type BookRepository interface {
 	Create(tx *gorm.DB, book domain.Book) domain.Book
 	Update(tx *gorm.DB, book domain.Book) domain.Book
 	Delete(tx *gorm.DB, book domain.Book)
-	FindById(tx *gorm.DB, bookId int) (domain.Book, error)
+	FindById(tx *gorm.DB, bookId int) domain.Book
 	FindAll(tx *gorm.DB) []domain.Book
 }
 
@@ -24,6 +24,7 @@ func (repository *bookRepositoryImpl) Create(tx *gorm.DB, book domain.Book) doma
 	err := tx.Create(&book).Error
 	if err != nil {
 		tx.Rollback()
+		panic(err.Error())
 	}
 	return book
 }
@@ -32,6 +33,7 @@ func (repository *bookRepositoryImpl) Update(tx *gorm.DB, book domain.Book) doma
 	err := tx.Save(&book).Error
 	if err != nil {
 		tx.Rollback()
+		panic(err.Error())
 	}
 	return book
 }
@@ -40,16 +42,18 @@ func (repository *bookRepositoryImpl) Delete(tx *gorm.DB, book domain.Book) {
 	err := tx.Delete(&book).Error
 	if err != nil {
 		tx.Rollback()
+		panic(err.Error())
 	}
 }
 
-func (repository *bookRepositoryImpl) FindById(tx *gorm.DB, bookId int) (domain.Book, error) {
+func (repository *bookRepositoryImpl) FindById(tx *gorm.DB, bookId int) domain.Book {
 	var book domain.Book
 	err := tx.First(&book, bookId).Error
 	if err != nil {
 		tx.Rollback()
+		panic(err.Error())
 	}
-	return book, err
+	return book
 }
 
 func (repository *bookRepositoryImpl) FindAll(tx *gorm.DB) []domain.Book {
@@ -57,6 +61,7 @@ func (repository *bookRepositoryImpl) FindAll(tx *gorm.DB) []domain.Book {
 	err := tx.Find(&books).Error
 	if err != nil {
 		tx.Rollback()
+		panic(err.Error())
 	}
 	return books
 }

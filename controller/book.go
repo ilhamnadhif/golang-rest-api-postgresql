@@ -30,11 +30,7 @@ func (controller *bookControllerImpl) Create(c *gin.Context) {
 	var bookRequest web.BookCreateRequest
 	err := c.ShouldBindJSON(&bookRequest)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, web.WebResponse{
-			Code:   http.StatusBadRequest,
-			Status: "BAD REQUEST",
-			Data:   err.Error(),
-		})
+		panic(err.Error())
 		return
 	}
 	book := controller.BookService.Create(bookRequest)
@@ -48,35 +44,17 @@ func (controller *bookControllerImpl) Create(c *gin.Context) {
 func (controller *bookControllerImpl) Update(c *gin.Context) {
 	id, errorParam := strconv.Atoi(c.Param("id"))
 	if errorParam != nil {
-		c.JSON(http.StatusBadRequest, web.WebResponse{
-			Code:   http.StatusBadRequest,
-			Status: "BAD REQUEST",
-			Data:   errorParam.Error(),
-		})
-		return
+		panic(errorParam.Error())
 	}
 	var bookRequest web.BookUpdateRequest
 	bookRequest.ID = uint(id)
 
 	err := c.ShouldBindJSON(&bookRequest)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, web.WebResponse{
-			Code:   http.StatusBadRequest,
-			Status: "BAD REQUEST",
-			Data:   err.Error(),
-		})
-		return
+		panic(err.Error())
 	}
 
-	book, errorService := controller.BookService.Update(bookRequest)
-	if errorService != nil {
-		c.JSON(http.StatusBadRequest, web.WebResponse{
-			Code:   http.StatusBadRequest,
-			Status: "BAD REQUEST",
-			Data:   errorService.Error(),
-		})
-		return
-	}
+	book := controller.BookService.Update(bookRequest)
 	c.JSON(http.StatusOK, web.WebResponse{
 		Code:   http.StatusOK,
 		Status: "OK",
@@ -87,23 +65,10 @@ func (controller *bookControllerImpl) Update(c *gin.Context) {
 func (controller *bookControllerImpl) Delete(c *gin.Context) {
 	id, errorParam := strconv.Atoi(c.Param("id"))
 	if errorParam != nil {
-		c.JSON(http.StatusBadRequest, web.WebResponse{
-			Code:   http.StatusBadRequest,
-			Status: "BAD REQUEST",
-			Data:   errorParam.Error(),
-		})
-		return
+		panic(errorParam.Error())
 	}
 
-	errorService := controller.BookService.Delete(id)
-	if errorService != nil {
-		c.JSON(http.StatusBadRequest, web.WebResponse{
-			Code:   http.StatusBadRequest,
-			Status: "BAD REQUEST",
-			Data:   errorService.Error(),
-		})
-		return
-	}
+	controller.BookService.Delete(id)
 	c.JSON(http.StatusOK, web.WebResponse{
 		Code:   http.StatusOK,
 		Status: "OK",
@@ -114,22 +79,9 @@ func (controller *bookControllerImpl) Delete(c *gin.Context) {
 func (controller *bookControllerImpl) FindById(c *gin.Context) {
 	id, errorParam := strconv.Atoi(c.Param("id"))
 	if errorParam != nil {
-		c.JSON(http.StatusBadRequest, web.WebResponse{
-			Code:   http.StatusBadRequest,
-			Status: "BAD REQUEST",
-			Data:   errorParam.Error(),
-		})
-		return
+		panic(errorParam.Error())
 	}
-	book, errorService := controller.BookService.FindById(id)
-	if errorService != nil {
-		c.JSON(http.StatusBadRequest, web.WebResponse{
-			Code:   http.StatusBadRequest,
-			Status: "BAD REQUEST",
-			Data:   errorService.Error(),
-		})
-		return
-	}
+	book := controller.BookService.FindById(id)
 	c.JSON(http.StatusOK, web.WebResponse{
 		Code:   http.StatusOK,
 		Status: "OK",

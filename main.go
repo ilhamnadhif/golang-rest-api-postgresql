@@ -14,7 +14,16 @@ func main() {
 	bookService := service.NewBookService(db, bookRepository)
 	bookController := controller.NewBookController(bookService)
 
-	r := gin.Default()
+	r := gin.New()
+	r.Use(gin.Logger())
+	r.Use(gin.CustomRecovery(func(c *gin.Context, err interface{}) {
+		c.JSON(500, gin.H{
+			"code" : 500,
+			"status" : "BAD REQUEST",
+			"data" : err,
+		})
+	}))
+
 	v1 := r.Group("/api/v1")
 	book := v1.Group("/books")
 	book.POST("/", bookController.Create)
@@ -23,5 +32,5 @@ func main() {
 	book.GET("/", bookController.FindAll)
 	book.GET("/:id", bookController.FindById)
 
-	r.Run(":3000")
+	r.Run(":4000")
 }

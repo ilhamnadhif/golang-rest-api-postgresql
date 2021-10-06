@@ -10,9 +10,9 @@ import (
 
 type BookService interface {
 	Create(request web.BookCreateRequest) web.BookResponse
-	Update(request web.BookUpdateRequest) (web.BookResponse, error)
-	Delete(bookId int) error
-	FindById(bookId int) (web.BookResponse, error)
+	Update(request web.BookUpdateRequest) web.BookResponse
+	Delete(bookId int)
+	FindById(bookId int) web.BookResponse
 	FindAll() []web.BookResponse
 }
 
@@ -42,14 +42,11 @@ func (service *bookServiceImpl) Create(request web.BookCreateRequest) web.BookRe
 	return helper.ToBookResponse(book)
 }
 
-func (service *bookServiceImpl) Update(request web.BookUpdateRequest) (web.BookResponse, error) {
+func (service *bookServiceImpl) Update(request web.BookUpdateRequest) web.BookResponse {
 	tx := service.DB.Begin()
 	defer tx.Commit()
 
-	findBook, err := service.BookRepository.FindById(tx, int(request.ID))
-	if err != nil {
-		return helper.ToBookResponse(findBook), err
-	}
+	findBook := service.BookRepository.FindById(tx, int(request.ID))
 
 	book := domain.Book{
 		ID:          findBook.ID,
@@ -59,31 +56,24 @@ func (service *bookServiceImpl) Update(request web.BookUpdateRequest) (web.BookR
 		Rating:      request.Rating,
 	}
 	book = service.BookRepository.Update(tx, book)
-	return helper.ToBookResponse(book), nil
+	return helper.ToBookResponse(book)
 }
 
-func (service *bookServiceImpl) Delete(bookId int) error {
+func (service *bookServiceImpl) Delete(bookId int) {
 	tx := service.DB.Begin()
 	defer tx.Commit()
 
-	findBook, err := service.BookRepository.FindById(tx, bookId)
-	if err != nil {
-		return err
-	}
+	findBook := service.BookRepository.FindById(tx, bookId)
 
 	service.BookRepository.Delete(tx, findBook)
-	return nil
 }
 
-func (service *bookServiceImpl) FindById(bookId int) (web.BookResponse, error) {
+func (service *bookServiceImpl) FindById(bookId int) web.BookResponse {
 	tx := service.DB.Begin()
 	defer tx.Commit()
 
-	book, err := service.BookRepository.FindById(tx, bookId)
-	if err != nil {
-		return helper.ToBookResponse(book), err
-	}
-	return helper.ToBookResponse(book), nil
+	book := service.BookRepository.FindById(tx, bookId)
+	return helper.ToBookResponse(book)
 }
 
 func (service *bookServiceImpl) FindAll() []web.BookResponse {
