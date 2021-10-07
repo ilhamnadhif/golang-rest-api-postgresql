@@ -35,7 +35,7 @@ func (service *bookServiceImpl) Create(request web.BookCreateRequest) web.BookRe
 	book := domain.Book{
 		Title:       request.Title,
 		Description: request.Description,
-		Price:       request.Price,
+		Price:       uint(request.Price),
 		Rating:      request.Rating,
 	}
 	book = service.BookRepository.Create(tx, book)
@@ -48,14 +48,14 @@ func (service *bookServiceImpl) Update(request web.BookUpdateRequest) web.BookRe
 
 	findBook := service.BookRepository.FindById(tx, int(request.ID))
 
-	book := domain.Book{
+	convertBook := domain.Book{
 		ID:          findBook.ID,
 		Title:       request.Title,
 		Description: request.Description,
-		Price:       request.Price,
+		Price:       uint(request.Price),
 		Rating:      request.Rating,
 	}
-	book = service.BookRepository.Update(tx, book)
+	book := service.BookRepository.Update(tx, convertBook)
 	return helper.ToBookResponse(book)
 }
 

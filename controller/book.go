@@ -2,6 +2,7 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
+	"golang-rest-api-postgresql/helper"
 	"golang-rest-api-postgresql/model/web"
 	"golang-rest-api-postgresql/service"
 	"net/http"
@@ -30,8 +31,7 @@ func (controller *bookControllerImpl) Create(c *gin.Context) {
 	var bookRequest web.BookCreateRequest
 	err := c.ShouldBindJSON(&bookRequest)
 	if err != nil {
-		panic(err.Error())
-		return
+		panic(helper.IfValidationError(err))
 	}
 	book := controller.BookService.Create(bookRequest)
 	c.JSON(http.StatusCreated, web.WebResponse{
@@ -47,11 +47,11 @@ func (controller *bookControllerImpl) Update(c *gin.Context) {
 		panic(errorParam.Error())
 	}
 	var bookRequest web.BookUpdateRequest
-	bookRequest.ID = uint(id)
+	bookRequest.ID = id
 
 	err := c.ShouldBindJSON(&bookRequest)
 	if err != nil {
-		panic(err.Error())
+		panic(helper.IfValidationError(err))
 	}
 
 	book := controller.BookService.Update(bookRequest)
