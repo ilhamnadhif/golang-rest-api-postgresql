@@ -5,10 +5,11 @@ import (
 )
 
 type Book struct {
-	ID          uint    `gorm:"primaryKey"`
-	Title       string  `gorm:"not null;unique"`
+	ID          uint `gorm:"primaryKey"`
+	UserID      uint
+	Title       string `gorm:"not null;unique"`
 	Description string
-	Price       uint    `gorm:"not null" `
+	Price       uint `gorm:"not null" `
 	Rating      float32
 	CreatedAt   time.Time
 	UpdatedAt   time.Time

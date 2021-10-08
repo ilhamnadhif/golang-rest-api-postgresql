@@ -8,6 +8,7 @@ import (
 func ToBookResponse(book domain.Book) web.BookResponse {
 	return web.BookResponse{
 		ID:          book.ID,
+		UserID:      book.UserID,
 		Title:       book.Title,
 		Description: book.Description,
 		Price:       book.Price,
@@ -20,6 +21,7 @@ func ToBookResponses(books []domain.Book) []web.BookResponse {
 	for _, book := range books {
 		bookResponse := web.BookResponse{
 			ID:          book.ID,
+			UserID:      book.UserID,
 			Title:       book.Title,
 			Description: book.Description,
 			Price:       book.Price,

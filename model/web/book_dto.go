@@ -1,6 +1,7 @@
 package web
 
 type BookCreateRequest struct {
+	UserID      uint    `json:"user_id" binding:"required,number"`
 	Title       string  `json:"title" binding:"required,gte=6"`
 	Description string  `json:"description" binding:"required"`
 	Price       int     `json:"price" binding:"required,number"`
@@ -17,6 +18,7 @@ type BookUpdateRequest struct {
 
 type BookResponse struct {
 	ID          uint    `json:"id"`
+	UserID      uint    `json:"user_id"`
 	Title       string  `json:"title"`
 	Description string  `json:"description"`
 	Price       uint    `json:"price"`

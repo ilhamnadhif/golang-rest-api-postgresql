@@ -33,6 +33,7 @@ func (service *bookServiceImpl) Create(request web.BookCreateRequest) web.BookRe
 	defer tx.Commit()
 
 	book := domain.Book{
+		UserID:      request.UserID,
 		Title:       request.Title,
 		Description: request.Description,
 		Price:       uint(request.Price),

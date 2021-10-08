@@ -39,7 +39,7 @@ func (repository *userRepositoryImpl) Delete(tx *gorm.DB, user domain.User) {
 
 func (repository *userRepositoryImpl) FindByID(tx *gorm.DB, userId int) domain.User {
 	var user domain.User
-	result := tx.Joins("UserProfile").Where("users.id = ?", userId).Find(&user)
+	result := tx.Preload("UserProfile").Preload("Books").Where("users.id = ?", userId).Find(&user)
 	if result.RowsAffected < 1 {
 		tx.Rollback()
 		panic(errors.New("row tidak ditemukan").Error())

@@ -38,14 +38,29 @@ func (service *userServiceImpl) FindByID(userId int) web.UserWithProfileResponse
 
 	user := service.UserRepository.FindByID(tx, userId)
 
+	var books []web.BookResponse
+	for _, book := range user.Books {
+		books = append(books, web.BookResponse{
+			ID:          book.ID,
+			UserID:      book.UserID,
+			Title:       book.Title,
+			Description: book.Description,
+			Price:       book.Price,
+			Rating:      book.Rating,
+		})
+	}
+
 	return web.UserWithProfileResponse{
 		ID:    user.ID,
 		Email: user.Email,
-		UserProfile: web.ProfileResponse{
+		UserProfile: web.UserProfileResponse{
+			ID:        user.UserProfile.ID,
+			UserID:    user.UserProfile.UserID,
 			FirstName: user.UserProfile.FirstName,
 			LastName:  user.UserProfile.LastName,
 			Address:   user.UserProfile.Address,
 			Age:       user.UserProfile.Age,
 		},
+		Books: books,
 	}
 }

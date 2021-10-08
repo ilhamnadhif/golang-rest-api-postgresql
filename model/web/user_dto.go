@@ -11,17 +11,10 @@ type UserResponse struct {
 	Password string `json:"password"`
 }
 
-/////////////////////////////////
-
-type ProfileResponse struct {
-	FirstName string `json:"first_name"`
-	LastName  string `json:"last_name"`
-	Address   string `json:"address"`
-	Age       uint   `json:"age"`
-}
 
 type UserWithProfileResponse struct {
-	ID          uint            `json:"id"`
-	Email       string          `json:"email"`
-	UserProfile ProfileResponse `json:"user_profile"`
+	ID          uint                `json:"id"`
+	Email       string              `json:"email"`
+	UserProfile UserProfileResponse `json:"user_profile"`
+	Books       []BookResponse      `json:"books"`
 }
