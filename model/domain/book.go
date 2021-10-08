@@ -12,5 +12,4 @@ type Book struct {
 	Rating      float32
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
-	//DeletedAt   gorm.DeletedAt `gorm:"index"`
 }
